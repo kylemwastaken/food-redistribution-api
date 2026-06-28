@@ -5,9 +5,13 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+app.use('/uploads', express.static('uploads'));
+
 // Routes
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
@@ -18,3 +22,4 @@ app.use('/api/users', userRoutes);
 
 const listingRoutes = require('./routes/listings');
 app.use('/api/listings', listingRoutes);
+

@@ -124,4 +124,49 @@ router.post('/', auth, upload.single('photo'), async (req, res) => {
   }
 });
 
+// GET /api/listings
+router.get('/', auth, async (req, res) => {
+
+  // Only recipients can browse listings
+  if (req.user.role !== 'recipient') {
+    return res.status(403).json({ error: 'Access denied. Recipients only.' });
+  }
+
+  // Determine which classification to show based on subType
+  const classification = req.user.subType === 'charity' ? 'edible' : 'inedible';
+
+  try {
+    const listings = await prisma.listing.findMany({
+      where: {
+        classification,
+        status: 'available',
+      },
+      orderBy: { pickupDeadline: 'asc' },
+      select: {
+        id: true,
+        title: true,
+        photoUrl: true,
+        quantity: true,
+        pickupDeadline: true,
+        classification: true,
+        createdAt: true,
+        donor: {
+          select: {
+            fullName: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({
+      totalListings: listings.length,
+      listings,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
 module.exports = router;

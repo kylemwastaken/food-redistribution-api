@@ -23,3 +23,6 @@ app.use('/api/users', userRoutes);
 const listingRoutes = require('./routes/listings');
 app.use('/api/listings', listingRoutes);
 
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
+

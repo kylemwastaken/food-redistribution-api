@@ -13,6 +13,14 @@ router.post('/register', async (req, res) => {
     return res.status(400).json({ error: 'All fields are required.' });
   }
 
+  // Validate password strength
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      error: 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number.',
+    });
+  }
+
   // Validate role
   if (!['donor', 'recipient'].includes(role)) {
     return res.status(400).json({ error: 'Role must be either donor or recipient.' });

@@ -45,6 +45,7 @@ model Listing {
 enum Role {
   donor
   recipient
+  admin
 }
 
 enum FoodType {
